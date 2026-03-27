@@ -1,0 +1,151 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #eee;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: 0.1em;
+  color: #e0e0e0;
+}
+
+/* Scoreboard */
+.scoreboard {
+  display: flex;
+  gap: 2rem;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.player-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #aaa;
+}
+
+.player-label.x { color: #e94560; }
+.player-label.o { color: #0f9b8e; }
+
+.score-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Status */
+.status {
+  font-size: 1.2rem;
+  min-height: 1.8rem;
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.status.win  { color: #ffd700; font-weight: 700; }
+.status.draw { color: #aaa; }
+
+/* Board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 8px;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  background: #16213e;
+  border: 2px solid #0f3460;
+  border-radius: 8px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  color: inherit;
+}
+
+.cell:hover:not(:disabled) {
+  background: #0f3460;
+  transform: scale(1.04);
+}
+
+.cell:disabled {
+  cursor: default;
+}
+
+.cell.x { color: #e94560; }
+.cell.o { color: #0f9b8e; }
+
+.cell.winning {
+  background: #0f3460;
+  border-color: #ffd700;
+  animation: pulse 0.5s ease;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #e94560;
+  color: #fff;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+  background: #c73652;
+  transform: translateY(-1px);
+}
+
+.btn.secondary {
+  background: #0f3460;
+}
+
+.btn.secondary:hover {
+  background: #0a2540;
+}
+
+@media (max-width: 400px) {
+  .board {
+    grid-template-columns: repeat(3, 85px);
+    grid-template-rows: repeat(3, 85px);
+  }
+  .cell { width: 85px; height: 85px; font-size: 2rem; }
+}

@@ -18,77 +18,39 @@ const WINNING_COMBOS = [
   [2, 4, 6], // anti-diagonal
 ];
 
-// ── State ──────────────────────────────────────────────────────────────────
-
-/** @type {Array<'X' | 'O' | null>} 9-element board; null means empty. */
 let board = Array(9).fill(null);
-
-/** @type {'X' | 'O'} Whose turn it is. */
 let currentPlayer = 'X';
-
-/** Whether the game has ended (win or draw). */
 let gameOver = false;
-
-/** Running score totals. */
 const scores = { X: 0, O: 0, draws: 0 };
-
-// ── DOM References ─────────────────────────────────────────────────────────
 
 const cells     = document.querySelectorAll('.cell');
 const statusEl  = document.getElementById('status');
 const winsX     = document.getElementById('wins-x');
 const winsO     = document.getElementById('wins-o');
 const drawsEl   = document.getElementById('draws');
-const restartBtn      = document.getElementById('restart');
-const resetScoresBtn  = document.getElementById('reset-scores');
+const restartBtn     = document.getElementById('restart');
+const resetScoresBtn = document.getElementById('reset-scores');
 
-// ── Core Logic ─────────────────────────────────────────────────────────────
-
-/**
- * Checks whether a player has a winning combination on the current board.
- * @param {'X' | 'O'} player
- * @returns {number[] | null} The winning triplet, or null if no win.
- */
 function getWinningCombo(player) {
   return WINNING_COMBOS.find(([a, b, c]) =>
     board[a] === player && board[b] === player && board[c] === player
   ) ?? null;
 }
 
-/**
- * Handles a cell click: marks the cell, then checks for win or draw.
- * @param {number} index - Board position (0–8).
- */
 function handleMove(index) {
   if (gameOver || board[index] !== null) return;
-
   board[index] = currentPlayer;
   renderCell(index);
-
   const combo = getWinningCombo(currentPlayer);
-  if (combo) {
-    endGame('win', combo);
-    return;
-  }
-
-  if (board.every(cell => cell !== null)) {
-    endGame('draw');
-    return;
-  }
-
+  if (combo) { endGame('win', combo); return; }
+  if (board.every(cell => cell !== null)) { endGame('draw'); return; }
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   setStatus(`Player ${currentPlayer}'s turn`);
 }
 
-/**
- * Ends the game, updates scores, and highlights winning cells if applicable.
- * @param {'win' | 'draw'} result
- * @param {number[]} [combo] - Winning cell indices (only for 'win').
- */
 function endGame(result, combo = []) {
   gameOver = true;
   disableAllCells();
-
   if (result === 'win') {
     scores[currentPlayer]++;
     updateScoreboard();
@@ -101,12 +63,6 @@ function endGame(result, combo = []) {
   }
 }
 
-// ── Rendering ──────────────────────────────────────────────────────────────
-
-/**
- * Updates the text and CSS class of a single cell.
- * @param {number} index
- */
 function renderCell(index) {
   const cell = cells[index];
   cell.textContent = currentPlayer;
@@ -114,54 +70,37 @@ function renderCell(index) {
   cell.disabled = true;
 }
 
-/**
- * Adds the 'winning' class to the three winning cells.
- * @param {number[]} combo
- */
 function highlightWinningCells(combo) {
   combo.forEach(i => cells[i].classList.add('winning'));
 }
 
-/** Disables every cell to prevent further input. */
 function disableAllCells() {
   cells.forEach(cell => (cell.disabled = true));
 }
 
-/**
- * Sets the status message text and optional modifier class.
- * @param {string} message
- * @param {string} [modifier] - CSS class to apply ('win' | 'draw').
- */
 function setStatus(message, modifier = '') {
   statusEl.textContent = message;
   statusEl.className = `status ${modifier}`.trim();
 }
 
-/** Refreshes all three score counters in the scoreboard. */
 function updateScoreboard() {
-  winsX.textContent  = scores.X;
-  winsO.textContent  = scores.O;
+  winsX.textContent   = scores.X;
+  winsO.textContent   = scores.O;
   drawsEl.textContent = scores.draws;
 }
 
-// ── Game Reset ─────────────────────────────────────────────────────────────
-
-/** Resets the board and state for a new round without clearing scores. */
 function restartGame() {
   board = Array(9).fill(null);
   currentPlayer = 'X';
   gameOver = false;
-
   cells.forEach(cell => {
     cell.textContent = '';
     cell.className = 'cell';
     cell.disabled = false;
   });
-
   setStatus("Player X's turn");
 }
 
-/** Resets both the board and all score counters. */
 function resetScores() {
   scores.X = 0;
   scores.O = 0;
@@ -169,8 +108,6 @@ function resetScores() {
   updateScoreboard();
   restartGame();
 }
-
-// ── Event Listeners ────────────────────────────────────────────────────────
 
 cells.forEach(cell => {
   cell.addEventListener('click', () => handleMove(Number(cell.dataset.index)));

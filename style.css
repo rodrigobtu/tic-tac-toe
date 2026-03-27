@@ -9,9 +9,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1a1a2e;
+  background: #1a1a2e url('images/IMG_3440.jpeg') center/cover no-repeat fixed;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #eee;
+  /* Prevent text selection while tapping cells on mobile */
   -webkit-user-select: none;
   user-select: none;
 }
@@ -24,6 +25,10 @@ body {
   padding: clamp(1rem, 4vw, 2rem);
   width: 100%;
   max-width: 480px;
+  background: rgba(26, 26, 46, 0.82);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 h1 {
@@ -32,6 +37,7 @@ h1 {
   color: #e0e0e0;
 }
 
+/* Scoreboard */
 .scoreboard {
   display: flex;
   gap: clamp(1.5rem, 6vw, 2rem);
@@ -60,6 +66,7 @@ h1 {
   font-weight: 700;
 }
 
+/* Status */
 .status {
   font-size: clamp(1rem, 3.5vw, 1.2rem);
   min-height: 1.8rem;
@@ -71,6 +78,7 @@ h1 {
 .status.win  { color: #ffd700; font-weight: 700; }
 .status.draw { color: #aaa; }
 
+/* Board — fluid cell size: fills available width, capped at 120px */
 .board {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -89,10 +97,13 @@ h1 {
   cursor: pointer;
   transition: background 0.15s, transform 0.1s;
   color: inherit;
+  /* Prevent double-tap zoom and improve tap responsiveness */
   touch-action: manipulation;
+  /* Ensure minimum touch target */
   min-height: 44px;
 }
 
+/* Only show hover effect on devices that actually have a pointer (not touch) */
 @media (hover: hover) and (pointer: fine) {
   .cell:hover:not(:disabled) {
     background: #0f3460;
@@ -119,6 +130,7 @@ h1 {
   100% { transform: scale(1); }
 }
 
+/* Controls */
 .controls {
   display: flex;
   gap: 1rem;
@@ -139,6 +151,7 @@ h1 {
   font-weight: 600;
   transition: background 0.2s, transform 0.1s;
   touch-action: manipulation;
+  /* Minimum touch target height */
   min-height: 44px;
 }
 
@@ -159,6 +172,7 @@ h1 {
   }
 }
 
+/* Active states for touch feedback */
 .btn:active {
   opacity: 0.85;
   transform: scale(0.97);
@@ -169,6 +183,7 @@ h1 {
   transform: scale(0.95);
 }
 
+/* Landscape on small screens: shrink board so it fits without scrolling */
 @media (max-height: 500px) and (orientation: landscape) {
   .container {
     flex-direction: row;

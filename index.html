@@ -3,57 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tic-Tac-Toe</title>
+  <meta name="description" content="A sliding photo puzzle — a tribute to a very good girl." />
+  <title>Sliding Puzzle</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Photo fills the entire screen -->
-  <div class="bg"></div>
-  <!-- Gradient darkens only the bottom so the dog stays visible -->
-  <div class="overlay"></div>
+  <div class="header">
+    <h1>Slide Puzzle</h1>
+    <p class="subtitle">In honor of a very good girl</p>
+  </div>
 
-  <div class="ui">
-
-    <div class="header">
-      <h1>Tic-Tac-Toe</h1>
-      <p class="subtitle">In honor of a very good girl</p>
+  <div class="info-bar">
+    <div class="stat">
+      <span class="stat-label">Moves</span>
+      <span class="stat-value" id="moves">0</span>
     </div>
-
-    <div class="scoreboard">
-      <div class="score">
-        <span class="player-label x">X</span>
-        <span class="score-value" id="wins-x">0</span>
-      </div>
-      <div class="score">
-        <span class="player-label">Draws</span>
-        <span class="score-value" id="draws">0</span>
-      </div>
-      <div class="score">
-        <span class="player-label o">O</span>
-        <span class="score-value" id="wins-o">0</span>
-      </div>
+    <div class="size-toggle">
+      <button class="size-btn active" data-size="3">3 × 3</button>
+      <button class="size-btn" data-size="4">4 × 4</button>
     </div>
+  </div>
 
-    <div class="status" id="status">Player X's turn</div>
-
-    <div class="board" id="board">
-      <button class="cell" data-index="0"></button>
-      <button class="cell" data-index="1"></button>
-      <button class="cell" data-index="2"></button>
-      <button class="cell" data-index="3"></button>
-      <button class="cell" data-index="4"></button>
-      <button class="cell" data-index="5"></button>
-      <button class="cell" data-index="6"></button>
-      <button class="cell" data-index="7"></button>
-      <button class="cell" data-index="8"></button>
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+    <div class="win-overlay" id="win-overlay" hidden>
+      <p class="win-emoji">🐾</p>
+      <p class="win-text">Puzzle solved!</p>
+      <p class="win-moves" id="win-moves"></p>
+      <button class="btn" id="win-new">Play again</button>
     </div>
+  </div>
 
-    <div class="controls">
-      <button class="btn" id="restart">Restart</button>
-      <button class="btn secondary" id="reset-scores">Reset Scores</button>
-    </div>
+  <div class="controls">
+    <button class="btn" id="new-game">New Game</button>
+    <button class="btn secondary" id="show-preview">Preview</button>
+  </div>
 
+  <!-- Full-image preview modal -->
+  <div class="preview-modal" id="preview-modal" hidden>
+    <img src="images/IMG_3440.jpeg" alt="Goal image" />
+    <p>Tap anywhere to close</p>
   </div>
 
   <script src="game.js"></script>

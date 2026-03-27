@@ -3,33 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A classic Tic-Tac-Toe game — a tribute to a very good girl." />
-  <meta name="author" content="rodrigobtu" />
-  <meta name="keywords" content="tic-tac-toe, game, javascript, html, css" />
   <title>Tic-Tac-Toe</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Full-screen background image layer -->
+  <!-- Photo fills the entire screen -->
   <div class="bg"></div>
+  <!-- Gradient darkens only the bottom so the dog stays visible -->
+  <div class="overlay"></div>
 
-  <div class="container">
+  <div class="ui">
+
     <div class="header">
       <h1>Tic-Tac-Toe</h1>
       <p class="subtitle">In honor of a very good girl</p>
     </div>
 
     <div class="scoreboard">
-      <div class="score" id="score-x">
+      <div class="score">
         <span class="player-label x">X</span>
         <span class="score-value" id="wins-x">0</span>
       </div>
-      <div class="score draws">
+      <div class="score">
         <span class="player-label">Draws</span>
         <span class="score-value" id="draws">0</span>
       </div>
-      <div class="score" id="score-o">
+      <div class="score">
         <span class="player-label o">O</span>
         <span class="score-value" id="wins-o">0</span>
       </div>
@@ -50,9 +50,10 @@
     </div>
 
     <div class="controls">
-      <button class="btn" id="restart">Restart Game</button>
+      <button class="btn" id="restart">Restart</button>
       <button class="btn secondary" id="reset-scores">Reset Scores</button>
     </div>
+
   </div>
 
   <script src="game.js"></script>

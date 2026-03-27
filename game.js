@@ -174,8 +174,10 @@ previewBtn.addEventListener('click', () => {
   previewModal.hidden = false;
 });
 
-previewModal.addEventListener('click', () => {
-  previewModal.hidden = true;
+// Close on tap anywhere in the modal (including the image itself — iOS fix)
+previewModal.addEventListener('click', () => { previewModal.hidden = true; });
+previewModal.querySelectorAll('img, p').forEach(el => {
+  el.addEventListener('click', () => { previewModal.hidden = true; });
 });
 
 // ── Start ──────────────────────────────────────────────────────────────────

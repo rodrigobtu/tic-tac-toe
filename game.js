@@ -143,7 +143,8 @@ function closeModal() { previewModal.close(); }
 // ── Events ─────────────────────────────────────────────────────────────────
 
 newGameBtn.addEventListener('click', newGame);
-winNewBtn.addEventListener('click', newGame);
+// pointerdown fires before click — more reliable on iOS Safari
+winNewBtn.addEventListener('pointerdown', newGame);
 
 sizeBtns.forEach(btn => {
   btn.addEventListener('click', () => {

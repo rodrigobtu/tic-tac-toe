@@ -21,15 +21,12 @@ body {
 }
 
 /* ── Header ─────────────────────────────────────────────────────────────── */
-.header {
-  text-align: center;
-}
+.header { text-align: center; }
 
 h1 {
   font-size: clamp(1.5rem, 6vw, 2.2rem);
   font-weight: 800;
   letter-spacing: 0.06em;
-  color: #f0e6d3;
 }
 
 .subtitle {
@@ -46,14 +43,10 @@ h1 {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: var(--board-size, min(88vw, 88svh - 220px, 420px));
+  max-width: min(88vw, 88svh - 220px, 420px);
 }
 
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
+.stat { display: flex; flex-direction: column; }
 
 .stat-label {
   font-size: 0.7rem;
@@ -65,11 +58,9 @@ h1 {
 .stat-value {
   font-size: 1.6rem;
   font-weight: 800;
-  color: #f0e6d3;
   line-height: 1;
 }
 
-/* Grid size toggle */
 .size-toggle {
   display: flex;
   gap: 4px;
@@ -96,7 +87,7 @@ h1 {
   color: #111;
 }
 
-/* ── Puzzle board ───────────────────────────────────────────────────────── */
+/* ── Board ──────────────────────────────────────────────────────────────── */
 .board-wrap {
   position: relative;
   width: min(88vw, 88svh - 220px, 420px);
@@ -125,21 +116,17 @@ h1 {
   transition: filter 0.1s, transform 0.12s;
   padding: 0;
   display: block;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tile:active:not(.blank) {
-  filter: brightness(1.25);
-  transform: scale(0.96);
+  filter: brightness(1.3);
+  transform: scale(0.94);
 }
 
 .tile.blank {
   background: #1c1c1c !important;
   cursor: default;
-}
-
-/* Faint number on each tile to help orientation */
-.tile-num {
-  display: none; /* hidden by default */
 }
 
 /* ── Win overlay ─────────────────────────────────────────────────────────── */
@@ -148,7 +135,7 @@ h1 {
   inset: 0;
   background: rgba(17, 17, 17, 0.88);
   border-radius: 10px;
-  display: flex;
+  display: none;           /* hidden by default */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -158,10 +145,7 @@ h1 {
   animation: fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
-}
+.win-overlay.open { display: flex; }
 
 .win-emoji { font-size: 3rem; }
 .win-text  { font-size: 1.5rem; font-weight: 800; color: #ffd700; }
@@ -189,6 +173,7 @@ h1 {
   transition: opacity 0.15s, transform 0.1s;
   background: #e8894a;
   color: #fff;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn.secondary {
@@ -201,29 +186,62 @@ h1 {
 
 /* ── Preview modal ──────────────────────────────────────────────────────── */
 .preview-modal {
+  display: none;           /* hidden by default */
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.92);
-  display: flex;
+  background: rgba(0, 0, 0, 0.92);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
   z-index: 100;
-  animation: fadeIn 0.2s ease;
-}
-
-.preview-modal img {
-  width: min(88vw, 88vh);
-  height: min(88vw, 88vh);
-  object-fit: cover;
-  border-radius: 12px;
-  border: 3px solid #444;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
-.preview-modal p {
-  color: #888;
-  font-size: 0.85rem;
+/* Shown when JS adds .open */
+.preview-modal.open { display: flex; }
+
+.modal-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 101;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modal-close:active { background: rgba(255,255,255,0.3); }
+
+.preview-modal img {
+  width: min(88vw, 78vh);
+  height: min(88vw, 78vh);
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid #444;
+  pointer-events: none;   /* clicks pass through to the modal overlay */
+}
+
+.modal-hint {
+  color: #666;
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+/* ── Animation ──────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }

@@ -1,17 +1,17 @@
 /**
  * Sliding Photo Puzzle
  *
- * The dog photo is split into N×N tiles. One tile is removed (blank space).
+ * The dog photo is split into N×N tiles. One tile is missing (blank space).
  * Tap any tile adjacent to the blank to slide it into the empty spot.
- * Rearrange all tiles to reconstruct the original photo.
+ * Goal: reconstruct the original photo.
  */
 
 const IMG = 'images/IMG_3440.jpeg';
 
 // ── State ──────────────────────────────────────────────────────────────────
 
-let N = 3;          // grid size (3 or 4)
-let tiles = [];     // tiles[position] = tileValue (N*N-1 = blank)
+let N = 3;       // grid size (3 or 4)
+let tiles = [];  // tiles[position] = tileValue  (N*N-1 = blank)
 let moves = 0;
 let solved = false;
 
@@ -25,30 +25,26 @@ const newGameBtn   = document.getElementById('new-game');
 const winNewBtn    = document.getElementById('win-new');
 const previewBtn   = document.getElementById('show-preview');
 const previewModal = document.getElementById('preview-modal');
+const modalClose   = document.getElementById('modal-close');
 const sizeBtns     = document.querySelectorAll('.size-btn');
 
 // ── Puzzle logic ───────────────────────────────────────────────────────────
 
-/** Returns the array indices adjacent (up/down/left/right) to `pos`. */
 function neighbors(pos) {
   const r = Math.floor(pos / N), c = pos % N;
   const result = [];
-  if (r > 0)   result.push(pos - N); // up
-  if (r < N-1) result.push(pos + N); // down
-  if (c > 0)   result.push(pos - 1); // left
-  if (c < N-1) result.push(pos + 1); // right
+  if (r > 0)   result.push(pos - N);
+  if (r < N-1) result.push(pos + N);
+  if (c > 0)   result.push(pos - 1);
+  if (c < N-1) result.push(pos + 1);
   return result;
 }
 
-/**
- * Shuffles the board by making many random valid moves from the solved state.
- * This guarantees the puzzle is always solvable.
- */
 function shuffle() {
   tiles = Array.from({ length: N * N }, (_, i) => i);
   let blank = N * N - 1;
-  const steps = N === 3 ? 300 : 500;
   let lastBlank = -1;
+  const steps = N === 3 ? 300 : 500;
 
   for (let i = 0; i < steps; i++) {
     const ns = neighbors(blank).filter(n => n !== lastBlank);
@@ -59,12 +55,10 @@ function shuffle() {
   }
 }
 
-/** Returns true when all tiles are back in their original positions. */
 function isSolved() {
   return tiles.every((v, i) => v === i);
 }
 
-/** Handles a tap on the tile at board position `pos`. */
 function handleTap(pos) {
   if (solved) return;
   const blank = tiles.indexOf(N * N - 1);
@@ -74,30 +68,18 @@ function handleTap(pos) {
   moves++;
   movesEl.textContent = moves;
 
-  // Update only the two swapped tiles for performance
   renderTile(blank);
   renderTile(pos);
 
   if (isSolved()) {
     solved = true;
     winMovesEl.textContent = `Completed in ${moves} move${moves !== 1 ? 's' : ''}!`;
-    winOverlay.hidden = false;
+    winOverlay.classList.add('open');
   }
 }
 
 // ── Rendering ──────────────────────────────────────────────────────────────
 
-/**
- * Computes the CSS background-position for a tile's original image slice.
- *
- * With background-size = N*100% × N*100%, the image is N times larger than
- * each cell. The percentage formula maps tile column/row to the correct slice:
- *   X% = col / (N-1) * 100   →  aligns the correct horizontal slice
- *   Y% = row / (N-1) * 100   →  aligns the correct vertical slice
- *
- * @param {number} tileValue - The tile's original index in the solved board.
- * @returns {{ bgSize: string, bgPos: string }}
- */
 function tileStyle(tileValue) {
   const col = tileValue % N;
   const row = Math.floor(tileValue / N);
@@ -109,7 +91,6 @@ function tileStyle(tileValue) {
   };
 }
 
-/** Updates the visual of a single board position in place. */
 function renderTile(pos) {
   const el = boardEl.children[pos];
   if (!el) return;
@@ -131,7 +112,6 @@ function renderTile(pos) {
   }
 }
 
-/** Builds the full board DOM from scratch and re-attaches all listeners. */
 function renderBoard() {
   boardEl.style.setProperty('--n', N);
   boardEl.innerHTML = '';
@@ -139,7 +119,7 @@ function renderBoard() {
   for (let pos = 0; pos < N * N; pos++) {
     const btn = document.createElement('button');
     boardEl.appendChild(btn);
-    renderTile(pos); // uses the element just appended
+    renderTile(pos);
     btn.addEventListener('click', () => handleTap(pos));
   }
 }
@@ -151,9 +131,14 @@ function newGame() {
   moves = 0;
   solved = false;
   movesEl.textContent = '0';
-  winOverlay.hidden = true;
+  winOverlay.classList.remove('open');
   renderBoard();
 }
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+
+function openModal()  { previewModal.classList.add('open'); }
+function closeModal() { previewModal.classList.remove('open'); }
 
 // ── Events ─────────────────────────────────────────────────────────────────
 
@@ -170,15 +155,13 @@ sizeBtns.forEach(btn => {
   });
 });
 
-previewBtn.addEventListener('click', () => {
-  previewModal.hidden = false;
-});
+previewBtn.addEventListener('click', openModal);
 
-// Close on tap anywhere in the modal (including the image itself — iOS fix)
-previewModal.addEventListener('click', () => { previewModal.hidden = true; });
-previewModal.querySelectorAll('img, p').forEach(el => {
-  el.addEventListener('click', () => { previewModal.hidden = true; });
-});
+// Close button (explicit — most reliable on iOS)
+modalClose.addEventListener('click', closeModal);
+
+// Tapping the dark overlay also closes
+previewModal.addEventListener('click', closeModal);
 
 // ── Start ──────────────────────────────────────────────────────────────────
 

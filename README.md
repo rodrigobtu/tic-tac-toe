@@ -93,3 +93,7 @@ Requires support for `<dialog>` (Chrome 37+, Firefox 98+, Safari 15.4+, all mode
 ## License
 
 MIT
+
+---
+
+*Created by [rodrigobtu](https://github.com/rodrigobtu)*

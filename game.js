@@ -135,10 +135,10 @@ function newGame() {
   renderBoard();
 }
 
-// ── Modal ──────────────────────────────────────────────────────────────────
+// ── Modal (native <dialog>) ────────────────────────────────────────────────
 
-function openModal()  { previewModal.classList.add('open'); }
-function closeModal() { previewModal.classList.remove('open'); }
+function openModal()  { previewModal.showModal(); }
+function closeModal() { previewModal.close(); }
 
 // ── Events ─────────────────────────────────────────────────────────────────
 
@@ -156,12 +156,7 @@ sizeBtns.forEach(btn => {
 });
 
 previewBtn.addEventListener('click', openModal);
-
-// Close button (explicit — most reliable on iOS)
 modalClose.addEventListener('click', closeModal);
-
-// Tapping the dark overlay also closes
-previewModal.addEventListener('click', closeModal);
 
 // ── Start ──────────────────────────────────────────────────────────────────
 

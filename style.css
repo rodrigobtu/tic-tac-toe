@@ -133,15 +133,14 @@ h1 {
 .win-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(17, 17, 17, 0.88);
+  background: rgba(17, 17, 17, 0.92);
   border-radius: 10px;
   display: none;           /* hidden by default */
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  /* NO backdrop-filter — it blocks touch events on children in iOS Safari */
   animation: fadeIn 0.3s ease;
 }
 

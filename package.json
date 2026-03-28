@@ -1,0 +1,32 @@
+{
+  "name": "sliding-photo-puzzle",
+  "version": "2.0.0",
+  "description": "A mobile-friendly sliding photo puzzle game built with vanilla HTML, CSS, and JavaScript. Rearrange scrambled tiles to reconstruct the original photo.",
+  "keywords": [
+    "sliding-puzzle",
+    "photo-puzzle",
+    "15-puzzle",
+    "8-puzzle",
+    "javascript",
+    "html",
+    "css",
+    "mobile-game",
+    "browser-game",
+    "no-framework",
+    "pomeranian"
+  ],
+  "author": "rodrigobtu",
+  "license": "MIT",
+  "homepage": "https://rodrigobtu.github.io/tic-tac-toe/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rodrigobtu/tic-tac-toe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rodrigobtu/tic-tac-toe/issues"
+  },
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  }
+}

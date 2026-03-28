@@ -184,9 +184,10 @@ h1 {
 .btn:active { opacity: 0.8; transform: scale(0.97); }
 
 /* ── Preview modal (native <dialog>) ────────────────────────────────────── */
-/* Do NOT set display on the dialog itself — the browser controls that.     */
-/* Use [open] attribute (added by showModal()) to style the open state.     */
+/* Explicitly hide the dialog — some Safari versions skip the UA default.   */
+/* showModal() adds [open]; that selector then overrides display:none.       */
 #preview-modal {
+  display: none;
   border: none;
   border-radius: 16px;
   padding: 0;

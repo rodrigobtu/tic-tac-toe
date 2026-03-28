@@ -27,7 +27,7 @@
 
   <div class="board-wrap">
     <div class="board" id="board"></div>
-    <div class="win-overlay" id="win-overlay" hidden>
+    <div class="win-overlay" id="win-overlay">
       <p class="win-emoji">🐾</p>
       <p class="win-text">Puzzle solved!</p>
       <p class="win-moves" id="win-moves"></p>
@@ -40,10 +40,11 @@
     <button class="btn secondary" id="show-preview">Preview</button>
   </div>
 
-  <!-- Full-image preview modal -->
-  <div class="preview-modal" id="preview-modal" hidden>
+  <!-- Preview modal: toggled with .open class (more reliable than hidden on iOS) -->
+  <div class="preview-modal" id="preview-modal">
+    <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
     <img src="images/IMG_3440.jpeg" alt="Goal image" />
-    <p>Tap anywhere to close</p>
+    <p class="modal-hint">Tap anywhere to close</p>
   </div>
 
   <script src="game.js"></script>

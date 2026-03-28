@@ -3,36 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A mobile-friendly sliding photo puzzle built with vanilla HTML, CSS, and JavaScript. Rearrange the scrambled tiles to reconstruct your favorite photo." />
+  <meta name="description" content="A mobile-friendly sliding photo puzzle built with vanilla HTML, CSS, and JavaScript. Rearrange the scrambled tiles to reconstruct the original photo." />
   <meta name="author" content="rodrigobtu" />
   <meta name="keywords" content="sliding puzzle, photo puzzle, 15-puzzle, 8-puzzle, javascript game, mobile game, pomeranian" />
-
-  <!-- Open Graph (WhatsApp, Facebook, iMessage link previews) -->
   <meta property="og:title" content="Sliding Photo Puzzle" />
-  <meta property="og:description" content="Can you reconstruct the photo? A tribute to a very good girl." />
+  <meta property="og:description" content="Can you reconstruct the photo? Slide the tiles into place." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="images/IMG_3440.jpeg" />
-
-  <!-- Twitter / X card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Sliding Photo Puzzle" />
-  <meta name="twitter:description" content="Can you reconstruct the photo? A tribute to a very good girl." />
   <meta name="twitter:image" content="images/IMG_3440.jpeg" />
-
   <title>Sliding Photo Puzzle</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="header">
-    <h1>Slide Puzzle</h1>
-    <p class="subtitle">In honor of a very good girl</p>
-  </div>
-
-  <div class="info-bar">
-    <div class="stat">
-      <span class="stat-label">Moves</span>
-      <span class="stat-value" id="moves">0</span>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="moves-wrap">
+      <span class="moves-label">MOVES</span>
+      <span class="moves-value" id="moves">0</span>
     </div>
     <div class="size-toggle">
       <button class="size-btn active" data-size="3">3 × 3</button>
@@ -40,26 +30,38 @@
     </div>
   </div>
 
+  <!-- Puzzle board -->
   <div class="board-wrap">
     <div class="board" id="board"></div>
+
+    <!-- Win overlay sits inside the board area -->
     <div class="win-overlay" id="win-overlay">
-      <p class="win-emoji">🐾</p>
-      <p class="win-text">Puzzle solved!</p>
-      <p class="win-moves" id="win-moves"></p>
-      <button class="btn" id="win-new">Play again</button>
+      <p class="win-icon">🐾</p>
+      <p class="win-text">Solved!</p>
+      <p class="win-sub" id="win-moves"></p>
+      <button class="win-btn" id="win-new">Play again</button>
     </div>
   </div>
 
+  <!-- Bottom controls -->
   <div class="controls">
-    <button class="btn" id="new-game">New Game</button>
-    <button class="btn secondary" id="show-preview">Preview</button>
+    <button class="btn primary" id="new-game">New Game</button>
+    <button class="btn ghost" id="show-preview">Preview</button>
   </div>
 
-  <!-- Native <dialog> — most reliable way to handle modals on iOS Safari -->
-  <dialog id="preview-modal">
-    <img src="images/IMG_3440.jpeg" alt="Goal image" />
-    <button class="modal-close" id="modal-close">✕ Close</button>
-  </dialog>
+  <!--
+    Preview overlay — plain div, no <dialog>.
+    ontouchstart fires instantly on iOS Safari without propagation issues.
+  -->
+  <div class="preview-overlay" id="preview-overlay">
+    <img class="preview-img" src="images/IMG_3440.jpeg" alt="Puzzle target image" />
+    <button
+      class="preview-close"
+      id="preview-close"
+      ontouchstart="closePreview()"
+      onclick="closePreview()"
+    >✕ Close</button>
+  </div>
 
   <script src="game.js"></script>
 </body>

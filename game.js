@@ -1,18 +1,22 @@
 /**
  * Sliding Photo Puzzle
  *
- * The dog photo is split into N×N tiles. One tile is missing (blank space).
- * Tap any tile adjacent to the blank to slide it into the empty spot.
+ * The photo is divided into N×N tiles with one blank space.
+ * Tap a tile adjacent to the blank to slide it into the gap.
  * Goal: reconstruct the original photo.
+ *
+ * Tile image slicing uses CSS background-size / background-position:
+ *   background-size:     N*100%  N*100%
+ *   background-position: (col/(N-1)*100)%  (row/(N-1)*100)%
  */
 
 const IMG = 'images/IMG_3440.jpeg';
 
 // ── State ──────────────────────────────────────────────────────────────────
 
-let N = 3;       // grid size (3 or 4)
-let tiles = [];  // tiles[position] = tileValue  (N*N-1 = blank)
-let moves = 0;
+let N      = 3;    // grid dimension
+let tiles  = [];   // tiles[position] = tileValue  (N²-1 = blank)
+let moves  = 0;
 let solved = false;
 
 // ── DOM ────────────────────────────────────────────────────────────────────
@@ -21,37 +25,42 @@ const boardEl      = document.getElementById('board');
 const movesEl      = document.getElementById('moves');
 const winOverlay   = document.getElementById('win-overlay');
 const winMovesEl   = document.getElementById('win-moves');
-const newGameBtn   = document.getElementById('new-game');
 const winNewBtn    = document.getElementById('win-new');
+const newGameBtn   = document.getElementById('new-game');
 const previewBtn   = document.getElementById('show-preview');
-const previewModal = document.getElementById('preview-modal');
-const modalClose   = document.getElementById('modal-close');
+const previewEl    = document.getElementById('preview-overlay');
 const sizeBtns     = document.querySelectorAll('.size-btn');
+
+// ── Preview open / close ───────────────────────────────────────────────────
+// closePreview is global so the inline ontouchstart attribute can call it.
+
+function openPreview()  { previewEl.classList.add('open'); }
+window.closePreview = function () { previewEl.classList.remove('open'); };
 
 // ── Puzzle logic ───────────────────────────────────────────────────────────
 
 function neighbors(pos) {
   const r = Math.floor(pos / N), c = pos % N;
-  const result = [];
-  if (r > 0)   result.push(pos - N);
-  if (r < N-1) result.push(pos + N);
-  if (c > 0)   result.push(pos - 1);
-  if (c < N-1) result.push(pos + 1);
-  return result;
+  const out = [];
+  if (r > 0)   out.push(pos - N);
+  if (r < N-1) out.push(pos + N);
+  if (c > 0)   out.push(pos - 1);
+  if (c < N-1) out.push(pos + 1);
+  return out;
 }
 
 function shuffle() {
   tiles = Array.from({ length: N * N }, (_, i) => i);
-  let blank = N * N - 1;
-  let lastBlank = -1;
-  const steps = N === 3 ? 300 : 500;
+  let blank    = N * N - 1;
+  let prevBlank = -1;
+  const steps  = N === 3 ? 300 : 500;
 
   for (let i = 0; i < steps; i++) {
-    const ns = neighbors(blank).filter(n => n !== lastBlank);
+    const ns   = neighbors(blank).filter(n => n !== prevBlank);
     const next = ns[Math.floor(Math.random() * ns.length)];
     [tiles[blank], tiles[next]] = [tiles[next], tiles[blank]];
-    lastBlank = blank;
-    blank = next;
+    prevBlank = blank;
+    blank     = next;
   }
 }
 
@@ -73,16 +82,16 @@ function handleTap(pos) {
 
   if (isSolved()) {
     solved = true;
-    winMovesEl.textContent = `Completed in ${moves} move${moves !== 1 ? 's' : ''}!`;
+    winMovesEl.textContent = `${moves} move${moves !== 1 ? 's' : ''}`;
     winOverlay.classList.add('open');
   }
 }
 
 // ── Rendering ──────────────────────────────────────────────────────────────
 
-function tileStyle(tileValue) {
-  const col = tileValue % N;
-  const row = Math.floor(tileValue / N);
+function tileStyle(val) {
+  const col = val % N;
+  const row = Math.floor(val / N);
   const bpx = N === 1 ? 0 : (col / (N - 1)) * 100;
   const bpy = N === 1 ? 0 : (row / (N - 1)) * 100;
   return {
@@ -92,18 +101,16 @@ function tileStyle(tileValue) {
 }
 
 function renderTile(pos) {
-  const el = boardEl.children[pos];
+  const el  = boardEl.children[pos];
   if (!el) return;
-  const val = tiles[pos];
+  const val     = tiles[pos];
   const isBlank = val === N * N - 1;
 
   el.className = 'tile' + (isBlank ? ' blank' : '');
   el.disabled  = isBlank;
 
   if (isBlank) {
-    el.style.backgroundImage    = '';
-    el.style.backgroundSize     = '';
-    el.style.backgroundPosition = '';
+    el.style.cssText = '';
   } else {
     const { bgSize, bgPos } = tileStyle(val);
     el.style.backgroundImage    = `url('${IMG}')`;
@@ -115,7 +122,6 @@ function renderTile(pos) {
 function renderBoard() {
   boardEl.style.setProperty('--n', N);
   boardEl.innerHTML = '';
-
   for (let pos = 0; pos < N * N; pos++) {
     const btn = document.createElement('button');
     boardEl.appendChild(btn);
@@ -128,23 +134,18 @@ function renderBoard() {
 
 function newGame() {
   shuffle();
-  moves = 0;
+  moves  = 0;
   solved = false;
   movesEl.textContent = '0';
   winOverlay.classList.remove('open');
   renderBoard();
 }
 
-// ── Modal (native <dialog>) ────────────────────────────────────────────────
-
-function openModal()  { previewModal.showModal(); }
-function closeModal() { previewModal.close(); }
-
 // ── Events ─────────────────────────────────────────────────────────────────
 
 newGameBtn.addEventListener('click', newGame);
-// pointerdown fires before click — more reliable on iOS Safari
 winNewBtn.addEventListener('pointerdown', newGame);
+previewBtn.addEventListener('click', openPreview);
 
 sizeBtns.forEach(btn => {
   btn.addEventListener('click', () => {
@@ -155,9 +156,6 @@ sizeBtns.forEach(btn => {
     newGame();
   });
 });
-
-previewBtn.addEventListener('click', openModal);
-modalClose.addEventListener('click', closeModal);
 
 // ── Start ──────────────────────────────────────────────────────────────────
 
